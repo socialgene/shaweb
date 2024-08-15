@@ -1,4 +1,59 @@
-<h1>FASTA Hasher</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5D2Y0WBSCZ"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-5D2Y0WBSCZ');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FASTA Hash Replacer</title>
+    <style>
+        /* Consent banner styling */
+        #consent-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #000;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            z-index: 1001;
+        }
+        #consent-banner button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        #consent-banner button:hover {
+            background-color: #45a049;
+        }
+
+        /* Overlay to prevent interaction with the page */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="overlay"></div>
+
+    <h1>FASTA Hasher</h1>
     <p>This tool hashes the sequence of each FASTA entry using sha512t24, described in:</p>
     <cite>Hart, R. K. &amp; Prlić, A. SeqRepo: A system for managing local collections of biological sequences. PLoS One 15, (2020).</cite>
     
@@ -12,6 +67,11 @@
     <h2>TSV mapping input deflines to sha512t24 hash</h2>
     <textarea id="deflineMap" rows="10" cols="50" readonly></textarea><br>
     <button onclick="downloadMap()">Download Defline Map</button>
+
+    <div id="consent-banner">
+        This site uses Google Analytics to keep track of how many people have used the tool.<br>By clicking "Accept," you agree to this.<br>If you do not agree, please close this page.<br>
+        <button id="accept-btn">Accept</button>
+    </div>
 
     <script>
         async function sha512t24u(input) {
@@ -94,5 +154,30 @@
             document.getElementById("fastaOutput").value = "";
             document.getElementById("deflineMap").value = "";
         }
-    </script>
 
+        function checkConsent() {
+            return localStorage.getItem('cookieConsent') === 'true';
+        }
+
+        function showConsentBanner() {
+            if (!checkConsent()) {
+                document.getElementById('consent-banner').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+        }
+
+        function acceptConsent() {
+            localStorage.setItem('cookieConsent', 'true');
+            document.getElementById('consent-banner').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            // You can initialize Google Analytics here if the user accepts
+            // e.g., initializeGoogleAnalytics();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('accept-btn').addEventListener('click', acceptConsent);
+            showConsentBanner();
+        });
+    </script>
+</body>
+</html>
